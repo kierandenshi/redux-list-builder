@@ -1,0 +1,25 @@
+.redux-list-builder {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  li {
+    background-color: $grey-extradark;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 16px;
+    border-radius: 4px;
+    margin: 2px;
+    .list-item-label {
+      padding: 0 5px;
+    }
+    .list-item-remove {
+      color: lightgrey;
+      font-weight: bold;
+      margin: -3px 0 0;
+      height: auto;
+    }
+
+  }
+}
