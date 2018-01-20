@@ -1,6 +1,6 @@
 {
   "name": "redux-list-builder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "List builder component for React and Redux",
   "main": "build/index.js",
   "repository": "git@github.com:kierandenshi/redux-list-builder.git",
