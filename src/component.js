@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
+    LIST_BUILDER_CREATE_LIST,
     LIST_BUILDER_ADD_ITEM,
     LIST_BUILDER_REMOVE_ITEM,
 } from './redux';
@@ -30,27 +31,29 @@ const defaultStyles = {
     },
 };
 
-const defaultValidation = value => !!value.match(/[^\s]/);
-
-class ListBuilder extends Component {
+export class ListBuilder extends Component {
     constructor(props) {
         super(props);
+        const { dispatch, identifier } = props;
+        dispatch({
+            type: LIST_BUILDER_CREATE_LIST,
+            payload: { identifier },
+        });
         this.state = { value: '' };
     }
 
-    validateInput(value) {
-        const { validation } = this.props;
-        return validation ? validation(value) : defaultValidation(value);
-    }
-
     handleSubmit() {
+        const { dispatch, validation, identifier } = this.props;
         const { value } = this.state;
-        if (this.validateInput(value.trim())) {
-            this.props.dispatch({
+        if (validation(value.trim())) {
+            dispatch({
                 type: LIST_BUILDER_ADD_ITEM,
                 payload: {
-                    id: `${new Date().valueOf()}${Math.random().toFixed(16).substring(2)}`,
-                    value,
+                    identifier,
+                    item: {
+                        id: `${new Date().valueOf()}${Math.random().toFixed(16).substring(2)}`,
+                        value,
+                    },
                 },
             });
             this.setState({ value: '' });
@@ -59,6 +62,7 @@ class ListBuilder extends Component {
 
     render() {
         const {
+            identifier,
             dispatch,
             list,
             inputLabel,
@@ -118,7 +122,10 @@ class ListBuilder extends Component {
                                 onClick={() => {
                                     dispatch({
                                         type: LIST_BUILDER_REMOVE_ITEM,
-                                        payload: item.id,
+                                        payload: {
+                                            id: item.id,
+                                            identifier,
+                                        },
                                     });
                                 }}
                             >{itemRemoveSymbol}
@@ -132,7 +139,7 @@ class ListBuilder extends Component {
 }
 
 ListBuilder.defaultProps = {
-    validation: null,
+    validation: value => !!value.match(/[^\s]/),
     buttonLabel: 'Add',
     inputLabel: 'Item value',
     itemRemoveSymbol: 'X',
@@ -147,10 +154,10 @@ ListBuilder.defaultProps = {
         itemLabelClassName: '',
         itemRemoveClassName: '',
     },
-
 };
 
 ListBuilder.propTypes = {
+    identifier: PropTypes.string.isRequired,
     list: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
         value: PropTypes.string,
@@ -174,7 +181,7 @@ ListBuilder.propTypes = {
 };
 
 export default connect(
-    state => ({
-        list: state.listBuilder,
+    (state, props) => ({
+        list: state.listBuilder[props.identifier] || [],
     }),
 )(ListBuilder);
