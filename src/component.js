@@ -31,7 +31,7 @@ const defaultStyles = {
     },
 };
 
-class ListBuilder extends Component {
+export class ListBuilder extends Component {
     constructor(props) {
         super(props);
         const { dispatch, identifier } = props;
@@ -154,7 +154,6 @@ ListBuilder.defaultProps = {
         itemLabelClassName: '',
         itemRemoveClassName: '',
     },
-
 };
 
 ListBuilder.propTypes = {
