@@ -69,19 +69,25 @@ module.exports =
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return LIST_BUILDER_CREATE_LIST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LIST_BUILDER_ADD_ITEM; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return LIST_BUILDER_REMOVE_ITEM; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return LIST_BUILDER_REMOVE_ITEM; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return LIST_BUILDER_CLEAR_LIST; });
 /* unused harmony export initialState */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return reducer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return reducer; });
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var prefix = function prefix(name) {
     return 'redux-flash-message/' + name;
 };
+var LIST_BUILDER_CREATE_LIST = prefix('LIST_BUILDER_CREATE_LIST');
 var LIST_BUILDER_ADD_ITEM = prefix('LIST_BUILDER_ADD_ITEM');
 var LIST_BUILDER_REMOVE_ITEM = prefix('LIST_BUILDER_REMOVE_ITEM');
 var LIST_BUILDER_CLEAR_LIST = prefix('LIST_BUILDER_CLEAR_LIST');
 
-var initialState = [];
+var initialState = {};
 
 var reducer = function reducer() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
@@ -90,17 +96,38 @@ var reducer = function reducer() {
         payload = _ref.payload;
 
     switch (type) {
+        case LIST_BUILDER_CREATE_LIST:
+            {
+                var identifier = payload.identifier;
+
+                return _extends({}, state, _defineProperty({}, identifier, []));
+            }
+
         case LIST_BUILDER_ADD_ITEM:
-            return state.concat([payload]);
+            {
+                var _identifier = payload.identifier,
+                    item = payload.item;
+
+                return _extends({}, state, _defineProperty({}, _identifier, state[_identifier].concat([item])));
+            }
 
         case LIST_BUILDER_REMOVE_ITEM:
-            return state.reduce(function (memo, item) {
-                item.id !== payload && memo.push(item);
-                return memo;
-            }, []);
+            {
+                var _identifier2 = payload.identifier,
+                    id = payload.id;
+
+                return _extends({}, state, _defineProperty({}, _identifier2, state[_identifier2].reduce(function (memo, item) {
+                    item.id !== id && memo.push(item);
+                    return memo;
+                }, [])));
+            }
 
         case LIST_BUILDER_CLEAR_LIST:
-            return initialState;
+            {
+                var _identifier3 = payload.identifier;
+
+                return _extends({}, state, _defineProperty({}, _identifier3, []));
+            }
 
         default:
             return state;
@@ -116,9 +143,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__component__ = __webpack_require__(2);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return __WEBPACK_IMPORTED_MODULE_0__component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__redux__ = __webpack_require__(0);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "reducer", function() { return __WEBPACK_IMPORTED_MODULE_1__redux__["d"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "reducer", function() { return __WEBPACK_IMPORTED_MODULE_1__redux__["e"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LIST_BUILDER_ADD_ITEM", function() { return __WEBPACK_IMPORTED_MODULE_1__redux__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LIST_BUILDER_REMOVE_ITEM", function() { return __WEBPACK_IMPORTED_MODULE_1__redux__["c"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LIST_BUILDER_REMOVE_ITEM", function() { return __WEBPACK_IMPORTED_MODULE_1__redux__["d"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "LIST_BUILDER_CLEAR_LIST", function() { return __WEBPACK_IMPORTED_MODULE_1__redux__["b"]; });
 
 
@@ -174,10 +201,6 @@ var defaultStyles = {
     }
 };
 
-var defaultValidation = function defaultValidation(value) {
-    return !!value.match(/[^\s]/);
-};
-
 var ListBuilder = function (_Component) {
     _inherits(ListBuilder, _Component);
 
@@ -186,28 +209,35 @@ var ListBuilder = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (ListBuilder.__proto__ || Object.getPrototypeOf(ListBuilder)).call(this, props));
 
+        var dispatch = props.dispatch,
+            identifier = props.identifier;
+
+        dispatch({
+            type: __WEBPACK_IMPORTED_MODULE_3__redux__["c" /* LIST_BUILDER_CREATE_LIST */],
+            payload: { identifier: identifier }
+        });
         _this.state = { value: '' };
         return _this;
     }
 
     _createClass(ListBuilder, [{
-        key: 'validateInput',
-        value: function validateInput(value) {
-            var validation = this.props.validation;
-
-            return validation ? validation(value) : defaultValidation(value);
-        }
-    }, {
         key: 'handleSubmit',
         value: function handleSubmit() {
+            var _props = this.props,
+                dispatch = _props.dispatch,
+                validation = _props.validation,
+                identifier = _props.identifier;
             var value = this.state.value;
 
-            if (this.validateInput(value.trim())) {
-                this.props.dispatch({
+            if (validation(value.trim())) {
+                dispatch({
                     type: __WEBPACK_IMPORTED_MODULE_3__redux__["a" /* LIST_BUILDER_ADD_ITEM */],
                     payload: {
-                        id: '' + new Date().valueOf() + Math.random().toFixed(16).substring(2),
-                        value: value
+                        identifier: identifier,
+                        item: {
+                            id: '' + new Date().valueOf() + Math.random().toFixed(16).substring(2),
+                            value: value
+                        }
                     }
                 });
                 this.setState({ value: '' });
@@ -218,22 +248,23 @@ var ListBuilder = function (_Component) {
         value: function render() {
             var _this2 = this;
 
-            var _props = this.props,
-                dispatch = _props.dispatch,
-                list = _props.list,
-                inputLabel = _props.inputLabel,
-                buttonLabel = _props.buttonLabel,
-                itemRemoveSymbol = _props.itemRemoveSymbol,
-                _props$classNames = _props.classNames,
-                formClassName = _props$classNames.formClassName,
-                labelClassName = _props$classNames.labelClassName,
-                wrapperClassName = _props$classNames.wrapperClassName,
-                inputClassName = _props$classNames.inputClassName,
-                submitButtonClassName = _props$classNames.submitButtonClassName,
-                listClassName = _props$classNames.listClassName,
-                itemClassName = _props$classNames.itemClassName,
-                itemLabelClassName = _props$classNames.itemLabelClassName,
-                itemRemoveClassName = _props$classNames.itemRemoveClassName;
+            var _props2 = this.props,
+                identifier = _props2.identifier,
+                dispatch = _props2.dispatch,
+                list = _props2.list,
+                inputLabel = _props2.inputLabel,
+                buttonLabel = _props2.buttonLabel,
+                itemRemoveSymbol = _props2.itemRemoveSymbol,
+                _props2$classNames = _props2.classNames,
+                formClassName = _props2$classNames.formClassName,
+                labelClassName = _props2$classNames.labelClassName,
+                wrapperClassName = _props2$classNames.wrapperClassName,
+                inputClassName = _props2$classNames.inputClassName,
+                submitButtonClassName = _props2$classNames.submitButtonClassName,
+                listClassName = _props2$classNames.listClassName,
+                itemClassName = _props2$classNames.itemClassName,
+                itemLabelClassName = _props2$classNames.itemLabelClassName,
+                itemRemoveClassName = _props2$classNames.itemRemoveClassName;
             var wrapper = defaultStyles.wrapper,
                 listItem = defaultStyles.listItem,
                 itemLabel = defaultStyles.itemLabel,
@@ -293,8 +324,11 @@ var ListBuilder = function (_Component) {
                                     style: !itemRemoveClassName && _extends({}, itemRemove),
                                     onClick: function onClick() {
                                         dispatch({
-                                            type: __WEBPACK_IMPORTED_MODULE_3__redux__["c" /* LIST_BUILDER_REMOVE_ITEM */],
-                                            payload: item.id
+                                            type: __WEBPACK_IMPORTED_MODULE_3__redux__["d" /* LIST_BUILDER_REMOVE_ITEM */],
+                                            payload: {
+                                                id: item.id,
+                                                identifier: identifier
+                                            }
                                         });
                                     }
                                 },
@@ -311,7 +345,9 @@ var ListBuilder = function (_Component) {
 }(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);
 
 ListBuilder.defaultProps = {
-    validation: null,
+    validation: function validation(value) {
+        return !!value.match(/[^\s]/);
+    },
     buttonLabel: 'Add',
     inputLabel: 'Item value',
     itemRemoveSymbol: 'X',
@@ -330,6 +366,7 @@ ListBuilder.defaultProps = {
 };
 
 ListBuilder.propTypes = {
+    identifier: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string.isRequired,
     list: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.arrayOf(__WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.shape({
         id: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
         value: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
@@ -352,9 +389,9 @@ ListBuilder.propTypes = {
     })
 };
 
-/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_2_react_redux__["connect"])(function (state) {
+/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_2_react_redux__["connect"])(function (state, props) {
     return {
-        list: state.listBuilder
+        list: state.listBuilder[props.identifier] || []
     };
 })(ListBuilder));
 
