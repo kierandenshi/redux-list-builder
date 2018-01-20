@@ -1,0 +1,67 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true,
+        "commonjs": true,
+        "jest": true
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "jest"
+    ],
+    "extends": "airbnb",
+    "rules": {
+        "max-len": "off",
+        "indent": [
+            "warn",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "function-paren-newline": "off",
+        "class-methods-use-this": "off",
+        "no-prototype-builtins": "off",
+        "no-unused-expressions": "off",
+        "react/jsx-indent": [
+            "warn",
+            4
+        ],
+        "react/jsx-indent-props": [
+            "warn",
+            4
+        ],
+        "react/jsx-filename-extension": [
+            "warn",
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
+        "react/jsx-curly-brace-presence": "off",
+        "import/prefer-default-export": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/extensions": [
+            "warn",
+            "never",
+            {
+                "jsx": "always",
+                "json": "always",
+                "sass": "always"
+            }
+        ]
+    },
+    "settings": {
+        "import/resolver": "webpack"
+    }
+}
