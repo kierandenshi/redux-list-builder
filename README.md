@@ -1,5 +1,7 @@
 # redux-list-builder
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kierandenshi/redux-list-builder.svg)](https://greenkeeper.io/)
+
 redux-list-builder works with react-redux to build lists of strings in Redux. 
 
 ## Install
